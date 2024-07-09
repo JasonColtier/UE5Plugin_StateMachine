@@ -8,7 +8,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnChangeState,ASM_MasterState*,CurrentState);
 
-UCLASS()
+UCLASS(Blueprintable,BlueprintType)
 class STATEMACHINE_API ASM_StateMachine : public ASM_MasterState
 {
 	GENERATED_BODY()
@@ -22,8 +22,14 @@ public:
 	* @param newState Changes the current state of the state machine to the new state. The new state is instantiated
 	*/
 	UFUNCTION(BlueprintCallable)
-	void ChangeState(TSoftClassPtr<ASM_MasterState>& newState);
+	void ChangeState(TSoftClassPtr<ASM_MasterState> newState);
 
+	/**
+	 * @brief the initial state of the state machine
+	 */
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TSoftClassPtr<ASM_MasterState> InitialStateClass;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

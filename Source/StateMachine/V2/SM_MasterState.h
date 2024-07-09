@@ -23,7 +23,7 @@ DECLARE_DYNAMIC_DELEGATE_TwoParams(FTransitionDelegate, TSoftClassPtr<ASM_Master
 /**
  * this class 
  */
-UCLASS(NotBlueprintable)
+UCLASS(Blueprintable,BlueprintType)
 class STATEMACHINE_API ASM_MasterState : public AActor
 {
 	GENERATED_BODY()

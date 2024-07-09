@@ -53,6 +53,9 @@ void ASM_MasterState::BeginPlay()
 	Super::BeginPlay();
 
 	UE_LOG(SM_StateMachine, Log, TEXT("state created %s"), *GetName());
+
+	DefaultTransitionDelegate.BindUFunction(this, "GetDefaultTransition");
+	TransitionsArray.AddUnique(DefaultTransitionDelegate);
 }
 
 // Called every frame

@@ -11,7 +11,7 @@ ASM_StateMachine::ASM_StateMachine()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void ASM_StateMachine::ChangeState(TSoftClassPtr<ASM_MasterState>& newState)
+void ASM_StateMachine::ChangeState(TSoftClassPtr<ASM_MasterState> newState)
 {
 	if (newState.IsNull())
 	{
@@ -33,7 +33,7 @@ void ASM_StateMachine::ChangeState(TSoftClassPtr<ASM_MasterState>& newState)
 		CurrentState = loadedState;
 	}else
 	{
-		CurrentState = GetWorld()->SpawnActor<ASM_MasterState>(newState.LoadSynchronous(),GetOwner()->GetActorLocation(), GetOwner()->GetActorRotation());
+		CurrentState = GetWorld()->SpawnActor<ASM_MasterState>(newState.LoadSynchronous());
 		LoadedStates.AddUnique(CurrentState);
 	}
 	
@@ -46,7 +46,9 @@ void ASM_StateMachine::ChangeState(TSoftClassPtr<ASM_MasterState>& newState)
 void ASM_StateMachine::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if(InitialStateClass != nullptr)
+		ChangeState(InitialStateClass);
 }
 
 TObjectPtr<ASM_MasterState> ASM_StateMachine::FindLoadedState(TSoftClassPtr<ASM_MasterState> stateClass)
@@ -99,5 +101,7 @@ void ASM_StateMachine::CheckTransitions()
 void ASM_StateMachine::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	CheckTransitions();
 }
 
