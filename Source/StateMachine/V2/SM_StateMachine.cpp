@@ -79,7 +79,7 @@ void ASM_StateMachine::CheckTransitions()
 
 	if(CurrentState->TransitionsArray.IsEmpty())
 	{
-		UE_LOG(SM_StateMachine, Error, TEXT("no transition found !"));
+		// UE_LOG(SM_StateMachine, Error, TEXT("no transition found !"));
 		return;
 	}
 	
@@ -95,6 +95,14 @@ void ASM_StateMachine::CheckTransitions()
 		}
 	}
 	// UE_LOG(StateMachine, Log, TEXT("cannot transition from current state"));
+}
+
+bool ASM_StateMachine::CurrentStateIsLeafState()
+{
+	if(!CurrentState)
+		return false;
+	
+	return CurrentState->TransitionsArray.IsEmpty();
 }
 
 // Called every frame

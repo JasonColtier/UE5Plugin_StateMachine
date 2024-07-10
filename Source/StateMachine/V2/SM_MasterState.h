@@ -32,29 +32,7 @@ public:
 	// Sets default values for this actor's properties
 	ASM_MasterState();
 
-	/**
-	* @brief When this state is activated and becomes the current state of the state machine
-	*/
-	UFUNCTION()
-	void OnEnterState();
 
-	/**
-	 * BP implementation entrer state
-	 */
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnStateEntered();
-
-	/**
-	* @brief When this state is exited
-	*/
-	UFUNCTION()
-	void OnExitState();
-
-	/**
-	 * BP implementation exit state
-	 */
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnExitingState();
 
 	/**
 	 * Time at we entered this state
@@ -86,6 +64,30 @@ public:
 	FTransitionDelegate DefaultTransitionDelegate;
 
 	/**
+	* @brief When this state is activated and becomes the current state of the state machine
+	*/
+	UFUNCTION()
+	void OnEnterState();
+
+	/**
+	 * BP implementation entrer state
+	 */
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnStateEntered();
+
+	/**
+	* @brief When this state is exited
+	*/
+	UFUNCTION()
+	void OnExitState();
+
+	/**
+	 * BP implementation exit state
+	 */
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnExitingState();
+	
+	/**
 	 * @brief the default transition of this state
 	 * @param nextState 
 	 * @param canTransition 
@@ -99,11 +101,17 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable)
 	void GetTransitions(TArray<TSoftClassPtr<ASM_MasterState>>& transitions);
+
+	
+	/**
+	 * mark this state as finished
+	 */
+	UFUNCTION(BlueprintCallable)
+	void SetStateFinished();
 	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 
 	/**
 	 * @brief draws debug states and transition on screen

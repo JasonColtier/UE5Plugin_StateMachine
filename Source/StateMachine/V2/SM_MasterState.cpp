@@ -23,8 +23,8 @@ void ASM_MasterState::OnEnterState()
 
 void ASM_MasterState::OnExitState()
 {
-	CurrentProgress = EStateProgressStatus::Finished;
-	FinishedTime = GetWorld()->GetTimeSeconds();
+	if(CurrentProgress == InProgress)
+		SetStateFinished();
 
 	OnExitingState();
 }
@@ -47,6 +47,12 @@ void ASM_MasterState::GetTransitions(TArray<TSoftClassPtr<ASM_MasterState>>& tra
 	}
 }
 
+void ASM_MasterState::SetStateFinished()
+{
+	CurrentProgress = Finished;
+	FinishedTime = GetWorld()->GetTimeSeconds();
+}
+
 // Called when the game starts or when spawned
 void ASM_MasterState::BeginPlay()
 {
@@ -55,7 +61,12 @@ void ASM_MasterState::BeginPlay()
 	UE_LOG(SM_StateMachine, Log, TEXT("state created %s"), *GetName());
 
 	DefaultTransitionDelegate.BindUFunction(this, "GetDefaultTransition");
-	TransitionsArray.AddUnique(DefaultTransitionDelegate);
+
+	TSoftClassPtr<ASM_MasterState> NextState;
+	bool CanTrans;
+	DefaultTransitionDelegate.Execute(NextState,CanTrans);
+	if(!NextState.IsNull())
+		TransitionsArray.AddUnique(DefaultTransitionDelegate);
 }
 
 // Called every frame

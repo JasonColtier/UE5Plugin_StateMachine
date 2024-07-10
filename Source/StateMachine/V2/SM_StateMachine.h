@@ -64,6 +64,12 @@ protected:
  */
 	UFUNCTION()
 	void CheckTransitions();
+
+	/**
+	 * Checks if the current state has no transition to another state = the end of the chain
+	 */
+	UFUNCTION(BlueprintCallable)
+	bool CurrentStateIsLeafState();
 	
 public:
 	// Called every frame
