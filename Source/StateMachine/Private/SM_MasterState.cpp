@@ -3,6 +3,8 @@
 
 #include "SM_MasterState.h"
 
+#include "Net/UnrealNetwork.h"
+
 
 DEFINE_LOG_CATEGORY(SM_StateMachine)
 
@@ -69,9 +71,16 @@ void ASM_MasterState::BeginPlay()
 		TransitionsArray.AddUnique(DefaultTransitionDelegate);
 }
 
+void ASM_MasterState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ASM_MasterState,StateID);
+}
+
 // Called every frame
 void ASM_MasterState::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
+
 

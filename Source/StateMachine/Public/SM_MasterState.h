@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "GameFramework/Actor.h"
 #include "SM_MasterState.generated.h"
 
@@ -32,34 +33,35 @@ public:
 	// Sets default values for this actor's properties
 	ASM_MasterState();
 
-
+	UPROPERTY(Replicated,EditAnywhere,Category="StateMachine")
+	FGameplayTag StateID;
 
 	/**
 	 * Time at we entered this state
 	 */
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly,Category="StateMachine")
 	int StartedTime{0};
 
 	/**
 	 * time we exited this state
 	 */
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly,Category="StateMachine")
 	int FinishedTime{0};
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly,Category="StateMachine")
 	TEnumAsByte<EStateProgressStatus> CurrentProgress = EStateProgressStatus::NotStarted;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly,Category="StateMachine")
 	TObjectPtr<ASM_StateMachine> ParentStateMachineRef;
 
 	/**
- * @brief the transitions of this state to other states
- */
+	 * @brief the transitions of this state to other states
+	 */
 	TArray<FTransitionDelegate> TransitionsArray;
 
 	/**
- * @brief the default transition of this state, can be configured in BP
- */
+	 * @brief the default transition of this state, can be configured in BP
+	 */
 	UPROPERTY()
 	FTransitionDelegate DefaultTransitionDelegate;
 
@@ -101,7 +103,6 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable)
 	void GetTransitions(TArray<TSoftClassPtr<ASM_MasterState>>& transitions);
-
 	
 	/**
 	 * mark this state as finished
@@ -116,8 +117,10 @@ protected:
 	/**
 	 * @brief draws debug states and transition on screen
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite,Category="StateMachine")
 	bool showDebug = false;
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
 	// Called every frame

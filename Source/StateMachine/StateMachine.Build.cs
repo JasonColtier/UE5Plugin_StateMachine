@@ -38,6 +38,9 @@ public class StateMachine : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"GameplayTags",
+				"Core",
+				"NetCore"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

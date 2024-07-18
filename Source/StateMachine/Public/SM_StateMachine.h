@@ -16,6 +16,12 @@ class STATEMACHINE_API ASM_StateMachine : public ASM_MasterState
 public:
 	// Sets default values for this actor's properties
 	ASM_StateMachine();
+	
+	/**
+	 * @brief the initial state of the state machine
+	 */
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="StateMachine")
+	TSoftClassPtr<ASM_MasterState> InitialStateClass;
 
 	/**
 	* @brief 
@@ -24,11 +30,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ChangeState(TSoftClassPtr<ASM_MasterState> newState);
 
-	/**
-	 * @brief the initial state of the state machine
-	 */
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	TSoftClassPtr<ASM_MasterState> InitialStateClass;
 	
 protected:
 	// Called when the game starts or when spawned
@@ -37,19 +38,19 @@ protected:
 	/**
 	 * @brief the current state of the state machine
 	 */
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly,Category="StateMachine")
 	TObjectPtr<ASM_MasterState> CurrentState;
 
 	/**
 	 * @brief called when a state is changed
 	 */
-	UPROPERTY(BlueprintAssignable)
+	UPROPERTY(BlueprintAssignable,Category="StateMachine")
 	FOnChangeState OnChangeStateDelegate;
 
 	/**
 	 * The states that have allready been instantiated
 	 */
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly,Category="StateMachine")
 	TArray<TObjectPtr<ASM_MasterState>> LoadedStates;
 
 	/**
