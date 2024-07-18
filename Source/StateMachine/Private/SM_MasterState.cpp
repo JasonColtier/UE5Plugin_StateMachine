@@ -71,12 +71,6 @@ void ASM_MasterState::BeginPlay()
 		TransitionsArray.AddUnique(DefaultTransitionDelegate);
 }
 
-void ASM_MasterState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME(ASM_MasterState,StateID);
-}
-
 // Called every frame
 void ASM_MasterState::Tick(float DeltaTime)
 {

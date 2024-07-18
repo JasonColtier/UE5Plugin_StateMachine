@@ -33,7 +33,7 @@ public:
 	// Sets default values for this actor's properties
 	ASM_MasterState();
 
-	UPROPERTY(Replicated,EditAnywhere,Category="StateMachine")
+	UPROPERTY(EditAnywhere,Category="StateMachine",BlueprintReadOnly)
 	FGameplayTag StateID;
 
 	/**
@@ -120,7 +120,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite,Category="StateMachine")
 	bool showDebug = false;
 
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
 	// Called every frame
