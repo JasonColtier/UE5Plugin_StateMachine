@@ -27,19 +27,41 @@ void ASM_StateMachine::ChangeState(TSoftClassPtr<ASM_MasterState> newState)
 
 	//we try to get the loaded state if it exists
 	const auto loadedState = FindLoadedState(newState);
-	
-	if(IsValid(loadedState))
+
+	if (IsValid(loadedState))
 	{
 		CurrentState = loadedState;
-	}else
+	}
+	else
 	{
 		CurrentState = GetWorld()->SpawnActor<ASM_MasterState>(newState.LoadSynchronous());
 		LoadedStates.AddUnique(CurrentState);
 	}
-	
+
 	CurrentState->ParentStateMachineRef = this;
 	CurrentState->OnEnterState();
 	OnChangeStateDelegate.Broadcast(CurrentState);
+}
+
+void ASM_StateMachine::ForceNextState()
+{
+	if (!IsValid(CurrentState))
+	{
+		UE_LOG(SM_StateMachine, Error, TEXT("invalid current state !"));
+		return;
+	}
+
+	if (CurrentState->TransitionsArray.IsEmpty())
+	{
+		UE_LOG(SM_StateMachine, Error, TEXT("no transition found from state %s!"),*CurrentState->GetName());
+		return;
+	}
+
+	//we force the transition to the next state by taking the first transition available
+	bool canTransition;
+	TSoftClassPtr<ASM_MasterState> nextState;
+	CurrentState->TransitionsArray[0].Execute(nextState, canTransition);
+	ChangeState(nextState);
 }
 
 // Called when the game starts or when spawned
@@ -47,21 +69,20 @@ void ASM_StateMachine::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(InitialStateClass != nullptr)
+	if (InitialStateClass != nullptr)
 		ChangeState(InitialStateClass);
 }
 
 TObjectPtr<ASM_MasterState> ASM_StateMachine::FindLoadedState(TSoftClassPtr<ASM_MasterState> stateClass)
 {
-	
-	if(stateClass.IsNull())
+	if (stateClass.IsNull())
 		return nullptr;
 
 	UClass* loadedState = stateClass.LoadSynchronous();
-	
+
 	for (auto state : LoadedStates)
 	{
-		if(state->IsA(loadedState))
+		if (state->IsA(loadedState))
 		{
 			return state;
 		}
@@ -71,18 +92,18 @@ TObjectPtr<ASM_MasterState> ASM_StateMachine::FindLoadedState(TSoftClassPtr<ASM_
 
 void ASM_StateMachine::CheckTransitions()
 {
-	if(!IsValid(CurrentState))
+	if (!IsValid(CurrentState))
 	{
 		UE_LOG(SM_StateMachine, Error, TEXT("invalid current state !"));
 		return;
 	}
 
-	if(CurrentState->TransitionsArray.IsEmpty())
+	if (CurrentState->TransitionsArray.IsEmpty())
 	{
 		// UE_LOG(SM_StateMachine, Error, TEXT("no transition found !"));
 		return;
 	}
-	
+
 	for (const auto& transition : CurrentState->TransitionsArray)
 	{
 		bool canTransition;
@@ -99,9 +120,9 @@ void ASM_StateMachine::CheckTransitions()
 
 bool ASM_StateMachine::CurrentStateIsLeafState()
 {
-	if(!CurrentState)
+	if (!CurrentState)
 		return false;
-	
+
 	return CurrentState->TransitionsArray.IsEmpty();
 }
 
@@ -112,4 +133,3 @@ void ASM_StateMachine::Tick(float DeltaTime)
 
 	CheckTransitions();
 }
-

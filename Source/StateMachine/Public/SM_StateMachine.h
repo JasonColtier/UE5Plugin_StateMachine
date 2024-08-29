@@ -30,6 +30,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ChangeState(TSoftClassPtr<ASM_MasterState> newState);
 
+
+	UFUNCTION(BlueprintCallable)
+	void ForceNextState();
 	
 protected:
 	// Called when the game starts or when spawned
